@@ -1,0 +1,16 @@
+{
+  "version": 3,
+  "configurePresets": [
+    {
+      "name": "msvc-vcpkg-qt",
+      "displayName": "MSVC + vcpkg + Qt 6.10.1",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build",
+      "cacheVariables": {
+        "CMAKE_TOOLCHAIN_FILE": "C:/Users/Usera/vcpkg/scripts/buildsystems/vcpkg.cmake",
+        "VCPKG_TARGET_TRIPLET": "x64-windows-static-md",
+        "CMAKE_PREFIX_PATH": "C:/Qt/6.10.1/msvc2022_64"
+      }
+    }
+  ]
+}

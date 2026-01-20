@@ -5,6 +5,8 @@ Implementation for file encryption.
 #include "CryptoEngine.h"
 #include <iostream>
 #include <fstream>
+#include <QFileInfo>
+#include <QDir>
 
 int FileManager::encryptFile(
     const std::string& inputPath,

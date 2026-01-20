@@ -1,0 +1,14 @@
+# ninja log v7
+18	2499	7905861438229967	FileEncrypterGUI_autogen/timestamp	918403bdb722e4
+18	2499	7905861438229967	FileEncrypterGUI_autogen/mocs_compilation.cpp	918403bdb722e4
+18	2499	7905861438229967	C:/Users/Usera/Desktop/Comp_Sci/File_Encrypter_Final_Project_With_GUI/build/FileEncrypterGUI_autogen/timestamp	918403bdb722e4
+18	2499	7905861438229967	C:/Users/Usera/Desktop/Comp_Sci/File_Encrypter_Final_Project_With_GUI/build/FileEncrypterGUI_autogen/mocs_compilation.cpp	918403bdb722e4
+2544	4203	7905861439160009	CMakeFiles/FileEncrypterGUI.dir/src/KeyDeriver.cpp.obj	68e0a8723434964b
+2528	4501	7905861439003043	CMakeFiles/FileEncrypterGUI.dir/src/CryptoEngine.cpp.obj	8e8accbd3b8658e1
+2559	7110	7905861439318525	CMakeFiles/FileEncrypterGUI.dir/src/EncryptionWorker.cpp.obj	a8603c53e2353ecc
+2536	7261	7905861439078291	CMakeFiles/FileEncrypterGUI.dir/src/FileManager.cpp.obj	a4bfa9fe42c08cfa
+2512	7268	7905861438750338	CMakeFiles/FileEncrypterGUI.dir/src/main.cpp.obj	57fe7ceba5f75ebd
+2506	7614	7905861438750338	CMakeFiles/FileEncrypterGUI.dir/FileEncrypterGUI_autogen/mocs_compilation.cpp.obj	862d3bfddd9c0d25
+2551	7666	7905861439230009	CMakeFiles/FileEncrypterGUI.dir/src/DropZone.cpp.obj	f934b0848ba6d8f1
+2520	8534	7905861438906640	CMakeFiles/FileEncrypterGUI.dir/src/mainwindow.cpp.obj	648cb5440b2145cd
+8535	9439	7905861499079932	FileEncrypterGUI.exe	2d159f8b30f77073

@@ -6,6 +6,7 @@ opening/closing streams, and basic error checking.
 #define FILE_MANAGER_H
 
 #include <string>
+#include <vector>
 
 class FileManager{
     public:

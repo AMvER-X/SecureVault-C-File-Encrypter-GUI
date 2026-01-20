@@ -1,5 +1,5 @@
 # Define the minimum version
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.21)
 
 # 1. Project Definition
 Project(FileEncrypterGUI
@@ -11,20 +11,22 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-# Point CMake to Qt installation
-set(CMAKE_PREFIX_PATH 
-"C:/Qt/6.10.1/mingw_64"
-"C:\Users\Usera\vcpkg\installed\x64-mingw-dynamic"
-)
-
 # Required for Qt's "Magic" (MOC, UIC, RCC)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORRC ON)
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+set(CMAKE_AUTOMOC_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/include")
+
+set(CMAKE_PREFIX_PATH "C:/Qt/6.10.1/msvc2022_64")
 
 # 2. Integrate external libraries
-find_package(unofficial-sodium CONFIG REQUIRED)
 find_package(Qt6 REQUIRED COMPONENTS Widgets)
+set(unofficial-sodium_DIR "C:/Users/Usera/vcpkg/installed/x64-windows-static-md/share/unofficial-sodium")
+find_package(unofficial-sodium CONFIG REQUIRED)
+
+set(CMAKE_AUTOMOC_RELAXED_MODE ON)
+include_directories(include)
 
 # 3. Executable Definitions
 # Source files go here
@@ -34,29 +36,40 @@ add_executable(${PROJECT_NAME}
     src/CryptoEngine.cpp
     src/FileManager.cpp
     src/KeyDeriver.cpp
-    ui/mainwindow.ui
+    src/DropZone.cpp
+    src/EncryptionWorker.cpp
+    
+    include/mainwindow.h
+    include/AlgoEnum.h
+    include/CryptoEngine.h
+    include/FileManager.h
+    include/KeyDeriver.h
+    include/DropZone.h
+    include/EncryptionWorker.h
+    src/mainwindow.ui
 )
 
-# 4. Compiler Warning Flags
-if (CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-    # String warning for GCC and Clang
-    add_compile_options(-Wall -Wextra -pedantic) 
-elseif(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-    # Strict warings for Visual Studio
-    add_compile_options(/W4)
-endif()
 
 # 5. Include Directories
 target_include_directories(${PROJECT_NAME}
-    PUBLIC
+PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src
         ${CMAKE_CURRENT_SOURCE_DIR}/include
         ${CMAKE_CURRENT_SOURCE_DIR}
+        ${CMAKE_BINARY_DIR}
+        ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}_autogen/include
 )    
 
 # 6. Link Libraries 
 target_link_libraries(${PROJECT_NAME}
-    PRIVATE 
-        Qt6::Widgets
-        unofficial-sodium::sodium
+PRIVATE 
+    Qt6::Widgets
+    unofficial-sodium::sodium
 )
+
+# 4. Compiler Warning Flags
+if (MSVC)
+    target_compile_options(${PROJECT_NAME} PRIVATE /W4)
+else()
+    target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -Wpedantic)
+endif()

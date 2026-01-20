@@ -1,34 +1,67 @@
 @echo off
-set VCPKG_TOOLCHAIN_PATH="C:\Users\Usera\vcpkg\scripts\buildsystems\vcpkg.cmake"
-set BUILD_DIR=build
+setlocal enabledelayedexpansion
 
-echo Starting C++ Project Build...
+:: 1. SPECIFY EXACT PATHS
+set "VS_PATH=C:\Program Files\Microsoft Visual Studio\18\Community\VC\Auxiliary\Build\vcvars64.bat"
+set "VCPKG_TOOLCHAIN=C:\Users\Usera\vcpkg\scripts\buildsystems\vcpkg.cmake"
+set "NINJA_EXE=C:\Users\Usera\ninja-win\ninja.exe"
+set "QT_PATH=C:\Qt\6.10.1\msvc2022_64"
+set "BUILD_DIR=build"
 
-if not exist %BUILD_DIR% (
-    mkdir %BUILD_DIR%
+:: 2. LOAD MSVC ENVIRONMENT
+if not exist "%VS_PATH%" (
+    echo [ERROR] vcvars64.bat not found at: "%VS_PATH%"
+    echo Please find the correct path to vcvars64.bat on your machine and update the script.
+    pause
+    exit /b 1
 )
 
-cd %BUILD_DIR% 
+echo [INFO] Initializing MSVC Environment...
+call "%VS_PATH%" > nul
 
-REM --- CMAKE Generation ---
-REM use MinGW and the VCKPG Tooclhain
+:: 3. CLEAN & PREPARE BUILD DIR
+if exist "%BUILD_DIR%" rmdir /s /q "%BUILD_DIR%"
+mkdir "%BUILD_DIR%"
 
-cmake .. -G "MinGW Makefiles" -DCMAKE_TOOLCHAIN_FILE=%VCPKG_TOOLCHAIN_PATH% -DVCPKG_TARGET_TRIPLET=x64-mingw-dynamic
-if errorlevel 1 goto error
+echo [INFO] Configuring with Ninja...
+cmake -S . -B %BUILD_DIR% ^
+  -G "Ninja" ^
+  -DCMAKE_MAKE_PROGRAM="%NINJA_EXE%" ^
+  -DCMAKE_TOOLCHAIN_FILE="%VCPKG_TOOLCHAIN%" ^
+  -DVCPKG_TARGET_TRIPLET=x64-windows-static-md ^
+  -DCMAKE_PREFIX_PATH="%QT_PATH%" ^
+  -DCMAKE_BUILD_TYPE=Debug
 
-REM --- Compilation ---
+if %ERRORLEVEL% NEQ 0 goto :error
 
-mingw32-make 
-if errorlevel 1 goto error
+echo [INFO] Building...
+cmake --build %BUILD_DIR% --parallel
+
+if %ERRORLEVEL% NEQ 0 goto :error
 
 echo.
-echo SUCCESS: Build Complete.
+echo [SUCCESS] Build Complete.
+pushd "%BUILD_DIR%"
 
-.\FileEncrypterGUI.exe
+if exist "FileEncrypterGUI.exe" (
+    echo [INFO] Deploying Qt dependencies...
+    %QT_PATH%\bin\windeployqt.exe --debug FileEncrypterGUI.exe
 
-goto :eof
+    echo [INFO] Launching Application...
+    .\FileEncrypterGUI.exe
+) else (
+    echo [WARNING] Build finished but FileEncrypterGUI.exe was not found in %CD%
+    goto :error
+)
+
+popd
+endlocal
+pause
+exit /b 0
 
 :error
 echo.
-echo FAILURE: Build process failed during CMake Generation or Compilation. Check error messages above.
+echo [FAILURE] Build process failed. Look at the compiler output above.
+if exist "%BUILD_DIR%" popd
 pause
+exit /b 1

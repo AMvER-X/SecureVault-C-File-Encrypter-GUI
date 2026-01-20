@@ -291,7 +291,7 @@ int CryptoEngine::decryptStream(
                 
                 if (cipher_bytes_read > static_cast<std::streamsize>(GCM_TAG_SIZE)) {
                     // Recover tag from the end of ciphertext_buf
-                    long actual_cipher_len = cipher_bytes_read - GCM_TAG_SIZE;
+                    size_t actual_cipher_len = cipher_bytes_read - GCM_TAG_SIZE;
                     
                     // Copy the tail of ciphertext_buf into tag_buf
                     std::memcpy(tag_buf.data(), 
